@@ -467,8 +467,8 @@ export default function Home() {
           <p className="text-xl text-gray-300 mb-10">👉 Join the most trusted coaching institute in Purnia today.</p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link href="/admissions" className="bg-blue-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-blue-700 transition shadow-lg">Book Demo</Link>
-            <a href="tel:+919876543210" className="bg-white text-gray-900 border border-gray-300 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition shadow-lg flex justify-center items-center gap-2">📞 Call Now</a>
-            <a href="https://wa.me/1234567890" target="_blank" rel="noreferrer" className="bg-green-500 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-green-600 transition shadow-lg flex justify-center items-center gap-2">💬 WhatsApp Now</a>
+            <a href="tel:+919234829905" className="bg-white text-gray-900 border border-gray-300 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition shadow-lg flex justify-center items-center gap-2">📞 Call Now</a>
+            <a href="https://wa.me/919234829905" target="_blank" rel="noreferrer" className="bg-green-500 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-green-600 transition shadow-lg flex justify-center items-center gap-2">💬 WhatsApp Now</a>
           </div>
         </div>
       </section>

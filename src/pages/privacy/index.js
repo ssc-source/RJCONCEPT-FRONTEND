@@ -48,7 +48,7 @@ export default function PrivacyPolicy() {
           <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">5. Contact Us</h2>
           <p>
             If you have any questions or suggestions about our Privacy Policy, do not hesitate to contact us at 
-            <strong> info@rjconcept.com</strong> or visit our center.
+            <strong> support@rjconcept.in</strong> or visit our center.
           </p>
         </div>
       </div>

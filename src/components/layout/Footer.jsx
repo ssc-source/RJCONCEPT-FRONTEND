@@ -121,11 +121,11 @@ export default function Footer() {
               </li>
 
               <li>
-                📞 +91 9876543210
+                📞 +91 9234829905
               </li>
 
               <li>
-                ✉️ info@rjconcept.com
+                ✉️ info@rjconcept.in
               </li>
 
             </ul>
@@ -143,7 +143,7 @@ export default function Footer() {
         <div className="border-t border-gray-800 mt-6 pt-4 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500 gap-2">
 
           <p>
-            © 2023 RJ CONCEPT
+            © 2026 RJ CONCEPT
           </p>
 
           <p>

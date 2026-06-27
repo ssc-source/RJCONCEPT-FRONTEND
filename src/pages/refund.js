@@ -79,10 +79,10 @@ export default function RefundPolicy() {
             8. Contact Us
           </h2>
           <p className="text-gray-700 mb-2">
-            Email: rjconcept07@gmail.com
+            Email: support@rjconcept.in
           </p>
           <p className="text-gray-700 mb-4">
-            Phone: 9142546263 ,8409304102
+            Phone: 9234829905 ,9142546263
           </p>
 
           <h2 className="text-xl font-semibold mt-6 mb-2">
