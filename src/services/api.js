@@ -6,6 +6,7 @@ const resolveApiBaseUrl = () => {
   if (!raw) return '';
 
   const normalized = raw.replace(/\/+$/, '');
+  console.log(process.env.NEXT_PUBLIC_API_URL);
   return /\/api$/i.test(normalized) ? normalized : `${normalized}/api`;
 };
 
