@@ -3,19 +3,20 @@ import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import api from '../../services/api';
 import { handleMediaError, resolveMediaUrl } from '../../utils/media';
+import Seo from '../../components/Seo';
+import { getBreadcrumbSchema, getArticleSchema } from '../../utils/seoSchemas';
 
 const blockedKeyActions = new Set(['p', 's']);
 
-export default function StudyMaterialViewerPage() {
+export default function StudyMaterialViewerPage({ initialMaterial }) {
   const router = useRouter();
   const { id } = router.query;
-  const [material, setMaterial] = useState(null);
+  const [material, setMaterial] = useState(initialMaterial || null);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!id) {
-      return;
-    }
+    if (initialMaterial) return;
+    if (!id) return;
 
     api.get(`/study-materials/public/${id}`)
       .then((response) => {
@@ -23,7 +24,7 @@ export default function StudyMaterialViewerPage() {
         setError('');
       })
       .catch(() => setError('Study material not found or not published.'));
-  }, [id]);
+  }, [id, initialMaterial]);
 
   useEffect(() => {
     const preventContextMenu = (event) => event.preventDefault();
@@ -46,62 +47,128 @@ export default function StudyMaterialViewerPage() {
     material ? `${resolveMediaUrl(`/api/study-materials/public/${material.id}/view`)}#toolbar=0&navpanes=0&scrollbar=1&view=FitH` : ''
   ), [material]);
 
+  const seoSchema = useMemo(() => {
+    if (!material) return null;
+    return [
+      getBreadcrumbSchema([
+        { name: 'Home', item: '/' },
+        { name: 'Study Material', item: '/study-material' },
+        { name: material.title, item: `/study-material/${material.id}` }
+      ]),
+      getArticleSchema({
+        id: material.id,
+        title: material.title,
+        description: material.description,
+        coverImageUrl: material.coverImageUrl,
+        createdAt: material.createdAt,
+        updatedAt: material.updatedAt,
+      })
+    ];
+  }, [material]);
+
   if (error) {
     return (
-      <div className="mx-auto max-w-4xl px-4 py-16 text-center">
-        <p className="text-lg font-semibold text-slate-800">{error}</p>
-        <Link href="/study-material" className="mt-6 inline-flex rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white">
-          Back to Library
-        </Link>
-      </div>
+      <>
+        <Seo title="Error Loading Material" noindex={true} />
+        <div className="mx-auto max-w-4xl px-4 py-16 text-center">
+          <p className="text-lg font-semibold text-slate-800">{error}</p>
+          <Link href="/study-material" className="mt-6 inline-flex rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white">
+            Back to Library
+          </Link>
+        </div>
+      </>
     );
   }
 
   if (!material) {
-    return <div className="mx-auto max-w-4xl px-4 py-16 text-center text-slate-500">Loading study material...</div>;
+    return (
+      <>
+        <Seo title="Loading Study Material" noindex={true} />
+        <div className="mx-auto max-w-4xl px-4 py-16 text-center text-slate-500">Loading study material...</div>
+      </>
+    );
   }
 
   return (
-    <div className="bg-slate-950 px-4 py-8 text-white sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl space-y-6">
-        <div className="flex flex-col gap-4 rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <Link href="/study-material" className="text-xs font-bold uppercase tracking-[0.24em] text-blue-300">Back to Library</Link>
-            <h1 className="mt-3 text-3xl font-black text-white">{material.title}</h1>
-            <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-300">{material.description || 'Focus mode enabled for reading inside the website viewer.'}</p>
-          </div>
-          <div className="rounded-[1.5rem] bg-white/10 px-5 py-4 text-sm leading-7 text-slate-200">
-            <p><span className="font-semibold text-white">Exam:</span> {material.examTag || 'General'}</p>
-            <p><span className="font-semibold text-white">Category:</span> {material.category || 'Study Resource'}</p>
-            <p><span className="font-semibold text-white">Format:</span> {material.fileKind}</p>
-          </div>
-        </div>
+    <>
+      <Seo
+        title={material.title}
+        description={material.description || 'Access free study resources, syllabus PDFs, and mock worksheets at RJ Concept.'}
+        image={material.coverImageUrl}
+        schema={seoSchema}
+      />
 
-        <div className="rounded-[2rem] border border-white/10 bg-black/40 p-4 shadow-2xl">
-          <div className="mb-4 rounded-2xl border border-amber-300/20 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">
-            Print and download shortcuts are disabled in this viewer where possible. Browsers still cannot provide absolute copy protection.
-          </div>
-
-          {material.fileKind === 'PDF' ? (
-            <iframe
-              title={material.title}
-              src={viewerUrl}
-              className="h-[78vh] w-full rounded-[1.5rem] border border-white/10 bg-white"
-            />
-          ) : (
-            <div className="overflow-auto rounded-[1.5rem] bg-slate-900 p-4">
-              <img
-                src={viewerUrl}
-                onError={handleMediaError}
-                alt={material.title}
-                draggable="false"
-                className="mx-auto max-h-[78vh] w-auto select-none rounded-xl object-contain"
-                style={{ WebkitUserSelect: 'none', userSelect: 'none' }}
-              />
+      <div className="bg-slate-950 px-4 py-8 text-white sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl space-y-6">
+          <div className="flex flex-col gap-4 rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <Link href="/study-material" className="text-xs font-bold uppercase tracking-[0.24em] text-blue-300">Back to Library</Link>
+              <h1 className="mt-3 text-3xl font-black text-white">{material.title}</h1>
+              <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-300">{material.description || 'Focus mode enabled for reading inside the website viewer.'}</p>
             </div>
-          )}
+            <div className="rounded-[1.5rem] bg-white/10 px-5 py-4 text-sm leading-7 text-slate-200">
+              <p><span className="font-semibold text-white">Exam:</span> {material.examTag || 'General'}</p>
+              <p><span className="font-semibold text-white">Category:</span> {material.category || 'Study Resource'}</p>
+              <p><span className="font-semibold text-white">Format:</span> {material.fileKind}</p>
+            </div>
+          </div>
+
+          <div className="rounded-[2rem] border border-white/10 bg-black/40 p-4 shadow-2xl">
+            <div className="mb-4 rounded-2xl border border-amber-300/20 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">
+              Print and download shortcuts are disabled in this viewer where possible. Browsers still cannot provide absolute copy protection.
+            </div>
+
+            {material.fileKind === 'PDF' ? (
+              <iframe
+                title={material.title}
+                src={viewerUrl}
+                className="h-[78vh] w-full rounded-[1.5rem] border border-white/10 bg-white"
+              />
+            ) : (
+              <div className="overflow-auto rounded-[1.5rem] bg-slate-900 p-4">
+                <img
+                  src={viewerUrl}
+                  onError={handleMediaError}
+                  alt={material.title}
+                  title={material.title}
+                  width={800}
+                  height={600}
+                  loading="lazy"
+                  draggable="false"
+                  className="mx-auto max-h-[78vh] w-auto select-none rounded-xl object-contain"
+                  style={{ WebkitUserSelect: 'none', userSelect: 'none' }}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
+}
+
+export async function getServerSideProps(context) {
+  const { id } = context.query;
+  const apiBase = process.env.NEXT_PUBLIC_API_URL || 'https://api.rjconcept.in/api';
+  
+  try {
+    const res = await fetch(`${apiBase.replace(/\/+$/, '')}/study-materials/public/${id}`);
+    if (res.ok) {
+      const result = await res.json();
+      const material = result?.data || result || null;
+      return {
+        props: {
+          initialMaterial: material,
+        },
+      };
+    }
+  } catch (error) {
+    console.error('Error fetching study material for SSR:', error.message);
+  }
+  
+  return {
+    props: {
+      initialMaterial: null,
+    },
+  };
 }

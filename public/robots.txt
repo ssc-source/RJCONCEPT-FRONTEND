@@ -1,6 +1,21 @@
 # *
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /dashboard
+Disallow: /dashboard/*
+Disallow: /login
+Disallow: /register
+Disallow: /checkout
+Disallow: /cart
+Disallow: /orders
+Disallow: /orders/*
+Disallow: /test-attempt
+Disallow: /test-result
+Disallow: /test-result/*
+Disallow: /test-ranking/*
+Disallow: /course/[id]/*
 
 # Host
 Host: https://rjconcept.in

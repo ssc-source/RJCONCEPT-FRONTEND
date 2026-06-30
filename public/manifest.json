@@ -1,0 +1,18 @@
+{
+  "name": "RJ Concept",
+  "short_name": "RJ Concept",
+  "description": "Bihar's Trusted Coaching Institute for UPSC, BPSC, SSC, Banking & Defence Exams",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo_rj.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,57 +1,32 @@
-// import '../styles/globals.css';
-// import { useRouter } from 'next/router';
-// import Layout from '../components/Layout';
-// import AuthGuard from '../components/admin/AuthGuard';
-// import ToastViewport from '../components/feedback/ToastViewport';
-// import ErrorBoundary from '../components/ErrorBoundary';
-
-// export default function App({ Component, pageProps }) {
-//   const router = useRouter();
-  
-//   // Protect the admin panel from rendering the public website Topbar/Footer
-//   const isAdminRoute =
-//     router.pathname.startsWith('/admin') ||
-//     router.pathname.startsWith('/dashboard/admin') ||
-//     router.pathname === '/test-series/[id]/student/[studentId]';
-
-//   if (isAdminRoute) {
-//     return (
-//       <ErrorBoundary>
-//         <ToastViewport />
-//         <AuthGuard>
-//           <Component {...pageProps} />
-//         </AuthGuard>
-//       </ErrorBoundary>
-//     );
-//   }
-
-//   return (
-//     <ErrorBoundary>
-//       <ToastViewport />
-//       <Layout>
-//         <Component {...pageProps} />
-//       </Layout>
-//     </ErrorBoundary>
-//   );
-// }
-
-
 import '../styles/globals.css';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 import AuthGuard from '../components/admin/AuthGuard';
 import ToastViewport from '../components/feedback/ToastViewport';
-import MobileBottomNav from '../components/layout/MobileBottomNav'; // ✅ ADDED
+import MobileBottomNav from '../components/layout/MobileBottomNav';
+import Seo from '../components/Seo';
 
 export default function App({ Component, pageProps }) {
   const router = useRouter();
   
-  // Protect the admin panel from rendering the public website Topbar/Footer
+  // Identify administrative panel routes
   const isAdminRoute = router.pathname.startsWith('/admin');
+
+  // Identify private/authenticated student and transactional routes
+  const isPrivateStudentRoute = 
+    router.pathname.startsWith('/dashboard') ||
+    router.pathname.startsWith('/orders') ||
+    router.pathname.startsWith('/checkout') ||
+    router.pathname === '/cart' ||
+    router.pathname === '/test-attempt' ||
+    router.pathname === '/test-result' ||
+    router.pathname.startsWith('/test-ranking') ||
+    router.pathname.includes('/learn');
 
   if (isAdminRoute) {
     return (
       <>
+        <Seo title="Admin Operations Portal" noindex={true} />
         <ToastViewport />
         <AuthGuard>
           <Component {...pageProps} />
@@ -62,16 +37,20 @@ export default function App({ Component, pageProps }) {
 
   return (
     <>
+      {isPrivateStudentRoute && (
+        <Seo title="Student Portal" noindex={true} />
+      )}
+      
       <ToastViewport />
 
-      {/* ✅ Added padding to prevent overlap */}
+      {/* Added padding to prevent overlap */}
       <div className="pb-20 md:pb-0">
         <Layout>
           <Component {...pageProps} />
         </Layout>
       </div>
 
-      {/* ✅ Mobile Bottom Nav (only for public routes) */}
+      {/* Mobile Bottom Nav (only for public routes) */}
       <MobileBottomNav />
     </>
   );

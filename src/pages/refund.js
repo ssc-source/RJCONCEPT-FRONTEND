@@ -1,17 +1,24 @@
-import Head from "next/head";
+import { useMemo } from 'react';
+import Seo from "../components/Seo";
+import { getBreadcrumbSchema } from '../utils/seoSchemas';
 
 export default function RefundPolicy() {
+  const seoSchema = useMemo(() => {
+    return getBreadcrumbSchema([
+      { name: 'Home', item: '/' },
+      { name: 'Refund Policy', item: '/refund' }
+    ]);
+  }, []);
+
   return (
     <>
-      <Head>
-        <title>Refund Policy | R J Concept</title>
-        <meta
-          name="description"
-          content="Refund Policy for R J Concept - Courses, Test Series, and Book Purchases"
-        />
-      </Head>
+      <Seo
+        title="Refund Policy"
+        description="Review the refund and cancellation policies of RJ Concept for online courses, mock test series, and printed books purchases."
+        schema={seoSchema}
+      />
 
-      <div className="min-h-screen bg-gray-50 py-10 px-4 md:px-20">
+      <div className="min-h-screen bg-gray-50 py-10 px-4 md:px-20 font-sans">
         <div className="max-w-4xl mx-auto bg-white p-6 md:p-10 rounded-xl shadow-md">
 
           <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
@@ -79,10 +86,10 @@ export default function RefundPolicy() {
             8. Contact Us
           </h2>
           <p className="text-gray-700 mb-2">
-            Email: support@rjconcept.in
+            Email: <a href="mailto:info@rjconcept.in" className="hover:underline font-semibold">info@rjconcept.in</a>
           </p>
           <p className="text-gray-700 mb-4">
-            Phone: 9234829905 ,9142546263
+            Phone: <a href="tel:+919234829905" className="hover:underline">+91 92348 29905</a>, <a href="tel:+919142546263" className="hover:underline">+91 91425 46263</a>
           </p>
 
           <h2 className="text-xl font-semibold mt-6 mb-2">

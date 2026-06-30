@@ -1,8 +1,10 @@
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import api from '../services/api';
 import { formatDate } from '../utils/format';
 import { handleMediaError, resolveMediaUrl } from '../utils/media';
+import Seo from '../components/Seo';
+import { getOrganizationSchema, getLocalBusinessSchema, getWebSiteSchema, getFAQSchema } from '../utils/seoSchemas';
 
 export default function Home() {
   const [notices, setNotices] = useState([]);
@@ -18,7 +20,32 @@ export default function Home() {
       .catch(() => {});
   }, []);
 
+  const homeSchemas = useMemo(() => [
+    getOrganizationSchema(),
+    getLocalBusinessSchema(),
+    getWebSiteSchema(),
+    getFAQSchema([
+      {
+        question: "Which exams does RJ Concept coach for?",
+        answer: "RJ Concept provides expert coaching for UPSC, BPSC, SSC, Banking, Railway, CTET, STET, and Defence exams with experienced faculty and custom study materials."
+      },
+      {
+        question: "Where is RJ Concept located in Bihar?",
+        answer: "RJ Concept is located at DIG Chowk, Purnia, Bihar - 854301."
+      },
+      {
+        question: "Does RJ Concept provide online test series?",
+        answer: "Yes, RJ Concept offers a complete online store with mock test series, study materials, and subject notes for structured exam preparation."
+      }
+    ])
+  ], []);
+
   return (
+    <>
+      <Seo 
+        path="/"
+        schema={homeSchemas}
+      />
       <div className="font-sans text-gray-900 bg-white">
       {/* 1. HERO SECTION */}
       <section className="bg-gradient-to-br from-blue-50 to-white text-gray-900 border-gray-100 flex items-center">
@@ -48,7 +75,14 @@ export default function Home() {
           <div className="md:w-2/5 flex justify-center w-full relative hidden lg:block">
             <div className="w-full max-w-sm aspect-square bg-white rounded-full shadow-2xl border border-gray-400 flex items-center justify-center overflow-hidden relative group">
                 <div className="absolute inset-0 bg-blue-150 opacity-0"></div>
-                <img src="/logo_rj.png" className="h-full w-auto p-2 rounded-full" alt="Logo" />
+                <img
+                  src="/logo_rj.png"
+                  width={384}
+                  height={384}
+                  title="RJ Concept Logo"
+                  className="h-full w-auto p-2 rounded-full"
+                  alt="RJ Concept Coaching Logo"
+                />
             </div>
           </div>
         </div>
@@ -207,7 +241,16 @@ export default function Home() {
               <div key={faculty.id} className="bg-slate-50 border border-gray-100 p-6 rounded-lg flex flex-col items-center text-center hover:bg-blue-50 transition">
                 <div className="mb-4 flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-slate-100">
                   {faculty.image || faculty.profileImageUrl ? (
-                    <img className="h-full w-full object-cover" src={resolveMediaUrl(faculty.image || faculty.profileImageUrl)} onError={handleMediaError} alt={faculty.name} />
+                    <img
+                      className="h-full w-full object-cover"
+                      src={resolveMediaUrl(faculty.image || faculty.profileImageUrl)}
+                      onError={handleMediaError}
+                      alt={faculty.name}
+                      title={faculty.name}
+                      width={96}
+                      height={96}
+                      loading="lazy"
+                    />
                   ) : (
                     <span className="text-2xl font-bold text-blue-700">
                       {(faculty.name || 'RJ')
@@ -474,5 +517,6 @@ export default function Home() {
       </section>
 
       </div>
+    </>
   );
 }
