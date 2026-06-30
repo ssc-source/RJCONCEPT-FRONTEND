@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://rjconcept.in
+
+# Sitemaps
+Sitemap: https://rjconcept.in/sitemap.xml
